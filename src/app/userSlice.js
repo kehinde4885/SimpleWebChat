@@ -16,7 +16,7 @@ export const userSlice = createSlice({
 
     updateChats: (state, action) => {
       state.serverChats = action.payload;
-      console.log("Redux Store has been updated with Messages from local Server")
+      console.log("Redux Store has been updated")
     },
   },
 });

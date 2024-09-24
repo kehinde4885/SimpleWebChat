@@ -23,17 +23,53 @@ function ChatsHeader() {
 }
 
 function Chats() {
+  const [page, changePage] = useState(1);
+  const [islastPage, changeIslastPage] = useState(false);
+  const [scrolledToTop, changeSTT] = useState(false);
   const serverChats = useSelector((state) => state.user.serverChats);
+
+  //console.log("Current page", page);
+  //console.log("is last Page?", islastPage);
+  //console.log("total Chats in Server", serverChats.length);
+  //console.log("Chats Showed", serverChats.slice(-(page * 25)).length);
+
+  const slicedServerChats = serverChats.slice(-(page * 25));
+
+  useEffect(() => {
+    if (serverChats.length === slicedServerChats.length) {
+      changeIslastPage(true);
+    } else {
+      //changeIslastPage(false);
+    }
+  }, [page]);
 
   const userName = useSelector((state) => state.user.name);
 
   let currentName;
 
-
-
   return (
-    <div className="grow space-y-4 overflow-auto bg-[rgba(250,250,250)] px-6 py-6">
-      {serverChats.map((chat, index) => {
+    <div
+      onScroll={(e) => {
+        //console.log(e.target.scrollTop);
+        e.target.scrollTop < 49 ? changeSTT(true) : "";
+        e.target.scrollTop >= 50 ? changeSTT(false) : "";
+      }}
+      id="container"
+      className="relative grow space-y-4 overflow-auto bg-[rgba(250,250,250)] px-6 py-6">
+      {/*  */}
+      {scrolledToTop && !islastPage ? (
+        <button
+          onClick={() => {
+            changePage(page + 1);
+          }}
+          className="popup">
+          Load More
+        </button>
+      ) : (
+        ""
+      )}
+      {/*  */}
+      {slicedServerChats.map((chat, index) => {
         const msg = Object.values(chat).shift();
         const sentBy = Object.keys(chat).shift();
 
@@ -51,6 +87,7 @@ function Chats() {
           renderChatBox(sentBy, msg, index)
         );
       })}
+      {/*  */}
     </div>
   );
 
@@ -114,6 +151,7 @@ function ChatBtns() {
 
       //update local Storage
       localStorage.setItem("serverMessages", JSON.stringify(newServerChats));
+      console.log("Updated Local Storage")
       //update Redux Store
       dispatch(updateChats(newServerChats));
 
