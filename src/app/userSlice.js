@@ -4,25 +4,23 @@ export const userSlice = createSlice({
   name: "user",
   initialState: {
     name: "Default",
-    chats: [],
+    serverChats: [],
   },
 
   reducers: {
     changeName: (state, action) => {
-     
-      state.name = action.payload
+      state.name = action.payload;
 
-      console.log(state.chats)
+      console.log("server Chats include",state.serverChats)
     },
 
     updateChats: (state, action) => {
-      state.chats = action.payload
-      
-    }
-  }
+      state.serverChats = action.payload;
+      console.log("Redux Store has been updated with Messages from local Server")
+    },
+  },
 });
 
+export const { changeName, updateChats } = userSlice.actions;
 
-export const { changeName , updateChats } = userSlice.actions
-
-export default userSlice.reducer
+export default userSlice.reducer;

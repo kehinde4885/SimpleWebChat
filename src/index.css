@@ -3,16 +3,53 @@
 @tailwind components;
 @tailwind utilities;
 
-@layer base{
-  body{
+@layer base {
+  body {
     display: grid;
     place-content: center;
     height: 100vh;
   }
-
-
 }
 
 .form {
-  @apply flex aspect-square h-[200px] flex-col justify-between bg-blue-500 px-10 py-8
+  @apply flex flex-col justify-center rounded-md bg-gray-300 px-8 py-10;
+}
+
+.onboardInput {
+  padding-block: 10px;
+  padding-inline: 8px;
+  border-radius: 4px;
+  margin-top: 12px;
+  margin-bottom: 20px;
+}
+.onboardInput:focus-visible {
+  /* outline: none; */
+  outline-offset: 0px;
+  outline-style: solid;
+}
+
+.chatMsg {
+  @apply max-w-[150px] rounded-t-md px-3 py-3 text-xs font-thin;
+}
+
+.myChat {
+  @apply ml-auto rounded-bl-md bg-[rgb(15,139,251)] text-white;
+}
+
+.otherChats {
+  @apply rounded-br-md bg-[rgb(222,226,235)] text-black;
+}
+
+.textBox {
+  border-radius: 4px;
+  font-size: 10px;
+  align-self: stretch;
+}
+
+.textBox:focus-visible{
+  outline: none;
+}
+
+input.textBox::placeholder {
+  font-size: 10px;
 }

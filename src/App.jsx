@@ -1,84 +1,50 @@
-import { useState } from "react";
 // import reactLogo from './assets/react.svg'
 // import viteLogo from '/vite.svg'
+
+//Packages
+import { useState, useEffect } from "react";
+import { useSelector, useDispatch } from "react-redux";
+
+//Components
+import OnBoard from "./Onboard";
+import Chat from "./Chat";
+
+//Styles
 import "./App.css";
+import { updateChats } from "./app/userSlice";
 
-import { useDispatch, useSelector } from "react-redux";
-import { changeName, updateChats } from "./app/userSlice";
-
-function intializeLocalStorage() {
-  //localStorage.setItem("User1", "userChatss");
+function initLocalServer() {
+  console.log("local Server Initialised");
+  const serverLoadMsg = [];
+  localStorage.getItem("serverMessages")
+    ? ""
+    : localStorage.setItem("serverMessages", JSON.stringify(serverLoadMsg));
 }
 
-intializeLocalStorage();
+initLocalServer();
 
 function App() {
-  const [isUserSet, changeUserSet] = useState(true);
-  const userName = useSelector((state) => state.user.name);
-
-  console.log(userName);
-  console.log(isUserSet);
-
-  return isUserSet ? <Chat /> : <OnBoard changeUserSet={changeUserSet} />;
-}
-
-function OnBoard({ changeUserSet }) {
   const dispatch = useDispatch();
-
-  return (
-    <form
-      onSubmit={(e) => {
-        e.preventDefault();
-        const formDets = new FormData(e.target);
-        const user = formDets.get("User");
-        dispatch(changeName(user));
-        changeUserSet(true);
-      }}
-      className="form">
-      <p>Please Enter your Name</p>
-      <input type="text" name="User" id="" />
-      <button className="bg-black text-white">Submit</button>
-    </form>
-  );
-}
-
-function Chat() {
-  const dispatch = useDispatch()
+  const [isUserSet, changeIsUserSet] = useState(false);
   const userName = useSelector((state) => state.user.name);
-  const chats = useSelector((state) => state.user.chats);
+  const [toggle, isToggle] = useState(true);
 
-  console.log(chats)
+  useEffect(() => {
+    console.log("App use Effect Running");
+    dispatch(updateChats(JSON.parse(localStorage.getItem("serverMessages"))));
+  }, [toggle]);
 
-  function sendChat() {
-    
-    const textBox = document.getElementById("chatText");
-    
-    const text = textBox.value;
-    
-    if (text.length !== 0) {
-      console.log("Text sent");
-      const newChats = chats.concat(text)
-      dispatch(updateChats(newChats))
-      localStorage.setItem(userName, JSON.stringify(newChats));
-    }
-  }
 
-  return (
-    <div className="relative h-screen w-[500px] max-w-[600px] bg-blue-800">
-      <h1 className="">This is my First Chat App</h1>
-      <div className="absolute bottom-0 w-full bg-black">
-        <form
-          onSubmit={(e) => {
-            e.preventDefault();
+  window.addEventListener("storage", () => {
+    console.log("Storage Updated")
+    isToggle(!toggle);
+  });
+  
 
-            sendChat();
-          }}
-          action="">
-          <input id="chatText" placeholder="message" type="text" />
-        </form>
-      </div>
-    </div>
-  );
+  console.log("Current User is", userName);
+  console.log("Has a user been Selected = ", isUserSet);
+
+  return isUserSet ? <Chat /> : <OnBoard changeIsUserSet={changeIsUserSet} />;
 }
 
 export default App;
