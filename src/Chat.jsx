@@ -28,18 +28,18 @@ function Chats() {
   const [scrolledToTop, changeSTT] = useState(false);
   const serverChats = useSelector((state) => state.user.serverChats);
 
-  //console.log("Current page", page);
-  //console.log("is last Page?", islastPage);
-  //console.log("total Chats in Server", serverChats.length);
-  //console.log("Chats Showed", serverChats.slice(-(page * 25)).length);
+  console.log("Current page", page);
+  console.log("is last Page?", islastPage);
+  console.log("total Chats in Server", serverChats.length);
+  console.log("Chats Showed", serverChats.slice(-(page * 25)).length);
 
   const slicedServerChats = serverChats.slice(-(page * 25));
 
   useEffect(() => {
     if (serverChats.length === slicedServerChats.length) {
       changeIslastPage(true);
-    } else {
-      //changeIslastPage(false);
+    } else if(serverChats.length > slicedServerChats.length) {
+      changeIslastPage(false);
     }
   }, [page]);
 
