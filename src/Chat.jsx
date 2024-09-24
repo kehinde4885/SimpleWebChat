@@ -36,12 +36,13 @@ function Chats() {
   const slicedServerChats = serverChats.slice(-(page * 25));
 
   useEffect(() => {
+    console.log("UEC")
     if (serverChats.length === slicedServerChats.length) {
       changeIslastPage(true);
     } else if(serverChats.length > slicedServerChats.length) {
       changeIslastPage(false);
     }
-  }, [page]);
+  }, [page,scrolledToTop]);
 
   const userName = useSelector((state) => state.user.name);
 
